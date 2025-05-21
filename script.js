@@ -38,36 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cursorRing.style.display = 'none';
     }
 
-
-    // --- === Preloader === ---
-    const preloader = document.getElementById('preloader');
-    const progressBar = preloader?.querySelector('.progress-bar');
-    if (preloader && progressBar) {
-        let loadProgress = 0;
-        const increment = () => Math.floor(Math.random() * 5) + 1; // Random small increments
-
-        const progressInterval = setInterval(() => {
-            loadProgress += increment();
-            if (loadProgress > 100) loadProgress = 100;
-            progressBar.style.width = loadProgress + '%';
-
-            if (loadProgress >= 100) {
-                clearInterval(progressInterval);
-                // Wait for CSS animation of progress bar to potentially finish
-                setTimeout(() => {
-                    preloader.classList.add('loaded');
-                    body.classList.remove('no-scroll'); // Assuming you add no-scroll during preload
-                    // Trigger entry animations for container AFTER preloader
-                    document.querySelector('.container')?.classList.add('container-visible');
-                }, 800); // Should match progress bar animation + small buffer
-            }
-        }, 80); // Interval for progress update
-    } else { // If no preloader, remove no-scroll immediately
-        body.classList.remove('no-scroll');
-        document.querySelector('.container')?.classList.add('container-visible');
-    }
-
-
     // --- === Smooth Scroll & Active Nav === ---
     const navLinks = document.querySelectorAll('nav .nav-link, .footer-nav a');
     navLinks.forEach(anchor => {
@@ -295,21 +265,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 }); // End DOMContentLoaded
-// --- === Preloader === ---
-const preloader = document.getElementById('preloader');
-const progressBar = preloader?.querySelector('.progress-bar'); // Optional progress bar
-if (preloader) { // Check if preloader exists
-    // ... (progress bar logic if you have one) ...
-
-    // Simplified timeout for preloader hiding, adjust time as needed
-    // This timeout should be long enough for initial assets and for the main container animation delay
-    const preloaderHideDelay = 3500; // Matches your container animation-delay
-
-    setTimeout(() => {
-        preloader.classList.add('loaded');
-        // body.classList.remove('no-scroll'); // If you use a class to prevent scroll during preload
-    }, preloaderHideDelay);
-
-} else {
-    // body.classList.remove('no-scroll');
-}
