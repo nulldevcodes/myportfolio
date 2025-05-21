@@ -1,130 +1,315 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Preloader ---
+    const body = document.body;
+
+    // --- === Custom Cursor === ---
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorRing = document.querySelector('.cursor-ring');
+    let cursorX = 0, cursorY = 0, ringX = 0, ringY = 0;
+
+    if (cursorDot && cursorRing && !isTouchDevice()) { // Only init if not touch
+        body.classList.add('cursor-active');
+        window.addEventListener('mousemove', (e) => {
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+        });
+
+        const followCursor = () => {
+            if (cursorDot && cursorRing) {
+                cursorDot.style.transform = `translate(${cursorX - cursorDot.offsetWidth / 2}px, ${cursorY - cursorDot.offsetHeight / 2}px)`;
+                ringX += (cursorX - ringX) * 0.15; // Spring effect for ring
+                ringY += (cursorY - ringY) * 0.15;
+                cursorRing.style.transform = `translate(${ringX - cursorRing.offsetWidth / 2}px, ${ringY - cursorRing.offsetHeight / 2}px)`;
+            }
+            requestAnimationFrame(followCursor);
+        };
+        requestAnimationFrame(followCursor);
+
+        const interactiveElements = 'a, button, .magnetic-link, .social-icon-link, .project-item-placeholder, .btn';
+        document.querySelectorAll(interactiveElements).forEach(el => {
+            el.addEventListener('mouseenter', () => body.classList.add('cursor-pointer'));
+            el.addEventListener('mouseleave', () => body.classList.remove('cursor-pointer'));
+        });
+
+        // Hide cursor when leaving window
+        document.addEventListener('mouseleave', () => body.classList.add('cursor-hidden'));
+        document.addEventListener('mouseenter', () => body.classList.remove('cursor-hidden'));
+    } else if (cursorDot && cursorRing) { // Hide elements if touch device
+        cursorDot.style.display = 'none';
+        cursorRing.style.display = 'none';
+    }
+
+
+    // --- === Preloader === ---
     const preloader = document.getElementById('preloader');
-    const progressBar = preloader.querySelector('.progress-bar');
+    const progressBar = preloader?.querySelector('.progress-bar');
+    if (preloader && progressBar) {
+        let loadProgress = 0;
+        const increment = () => Math.floor(Math.random() * 5) + 1; // Random small increments
 
-    // Simulate loading time, or replace with actual asset loading checks
-    let loadProgress = 0;
-    const progressInterval = setInterval(() => {
-        loadProgress += 10; // Or some other increment
-        if (progressBar) progressBar.style.width = loadProgress + '%';
-        if (loadProgress >= 100) {
-            clearInterval(progressInterval);
-            setTimeout(() => {
-                if (preloader) preloader.classList.add('loaded');
-            }, 500); // Delay for progress bar to complete visually
-        }
-    }, 150); // Adjust timing
+        const progressInterval = setInterval(() => {
+            loadProgress += increment();
+            if (loadProgress > 100) loadProgress = 100;
+            progressBar.style.width = loadProgress + '%';
 
-    window.addEventListener('load', () => { // Fallback if DOMContentLoaded is too early
-        clearInterval(progressInterval);
-        if (progressBar) progressBar.style.width = '100%';
-         setTimeout(() => {
-            if (preloader) preloader.classList.add('loaded');
-        }, 500);
-    });
+            if (loadProgress >= 100) {
+                clearInterval(progressInterval);
+                // Wait for CSS animation of progress bar to potentially finish
+                setTimeout(() => {
+                    preloader.classList.add('loaded');
+                    body.classList.remove('no-scroll'); // Assuming you add no-scroll during preload
+                    // Trigger entry animations for container AFTER preloader
+                    document.querySelector('.container')?.classList.add('container-visible');
+                }, 800); // Should match progress bar animation + small buffer
+            }
+        }, 80); // Interval for progress update
+    } else { // If no preloader, remove no-scroll immediately
+        body.classList.remove('no-scroll');
+        document.querySelector('.container')?.classList.add('container-visible');
+    }
 
 
-    // --- Smooth scroll for internal links ---
-    const internalLinks = document.querySelectorAll('a[href^="#"]');
-    internalLinks.forEach(anchor => {
+    // --- === Smooth Scroll & Active Nav === ---
+    const navLinks = document.querySelectorAll('nav .nav-link, .footer-nav a');
+    navLinks.forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            if (targetId && targetId.length > 1 && targetElement) {
-                e.preventDefault();
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start' // Align to top, can be 'center'
-                });
-
-                // Optional: Update active nav link (basic example)
-                document.querySelectorAll('nav .nav-link').forEach(link => link.classList.remove('active'));
-                this.classList.add('active');
+            if (targetId && targetId.startsWith('#') && targetId.length > 1) {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Basic active class handling (more robust with Intersection Observer)
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    // Close mobile menu if open (you'd need a mobile menu system first)
+                }
             }
         });
     });
 
-    // --- Update copyright year ---
-    const currentYearSpan = document.getElementById('current-year');
-    if (currentYearSpan) {
-        currentYearSpan.textContent = new Date().getFullYear();
-    }
-
-    // --- Intersection Observer for fade-in animations on scroll ---
-    const animatedElements = document.querySelectorAll('.card, header h1, nav ul li, footer, .section-title, .card p, .button-group, .social-links li');
-
-    const observerOptions = {
-        root: null, // viewport
-        rootMargin: '0px',
-        threshold: 0.15 // Trigger when 15% of the element is visible
+    // Update active nav on scroll (more robust)
+    const sections = document.querySelectorAll('main section[id]');
+    const scrollActiveNav = () => {
+        let currentSectionId = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - (window.innerHeight / 3) ) { // Adjust offset
+                currentSectionId = section.getAttribute('id');
+            }
+        });
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentSectionId}`) {
+                link.classList.add('active');
+            }
+        });
     };
+    window.addEventListener('scroll', scrollActiveNav);
+
+
+    // --- === Copyright Year === ---
+    const currentYearSpan = document.getElementById('current-year');
+    if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+
+
+    // --- === Intersection Observer for Animations === ---
+    const animatedElements = document.querySelectorAll('.dynamic-reveal');
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
 
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible'); // Use utility class for animation
-                // If using .animate-fade-in-up:
-                // entry.target.style.opacity = '1';
-                // entry.target.style.transform = 'translateY(0)';
-                obs.unobserve(entry.target); // Animate only once
+                entry.target.classList.add('is-visible');
+                // Animate skill bars if this is the skills section
+                if (entry.target.id === 'skills-section' || entry.target.classList.contains('skills-bars-placeholder')) {
+                    entry.target.querySelectorAll('.skill-level-fill').forEach(fill => {
+                        fill.style.width = fill.parentElement.parentElement.style.getPropertyValue('--skill-level') || '0%';
+                    });
+                }
+                obs.unobserve(entry.target);
             }
         });
     }, observerOptions);
-
-    animatedElements.forEach(el => {
-        // Add the initial state class if using utility classes
-        el.classList.add('animate-fade-in-up'); // Example: all elements get this
-        observer.observe(el);
-    });
+    animatedElements.forEach(el => observer.observe(el));
 
 
-    // --- Interactive Card Glow Effect ---
+    // --- === Interactive Card 3D Tilt Effect === ---
     const interactiveCards = document.querySelectorAll('.interactive-card');
     interactiveCards.forEach(card => {
+        const wrapper3D = card.querySelector('.card-3d-wrapper');
         const glow = card.querySelector('.card-glow');
-        if (glow) {
+
+        if (wrapper3D) {
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                glow.style.setProperty('--mouse-x', `${x}px`);
-                glow.style.setProperty('--mouse-y', `${y}px`);
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -7; // Max rotation 7deg
+                const rotateY = ((x - centerX) / centerX) * 7;  // Max rotation 7deg
+
+                wrapper3D.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(30px)`;
+
+                if (glow) {
+                    glow.style.setProperty('--mouse-x', `${x}px`);
+                    glow.style.setProperty('--mouse-y', `${y}px`);
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                wrapper3D.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
             });
         }
     });
 
-    // --- Text Reveal Animation (Staggered) ---
-    // You'd apply .text-reveal class to an element like <h2> or <p>
-    // and its children <span>s will be animated.
-    document.querySelectorAll('.text-reveal').forEach(textElement => {
-        const text = textElement.textContent.trim();
-        textElement.innerHTML = ''; // Clear existing content
-        text.split('').forEach((char, index) => {
-            const span = document.createElement('span');
-            span.textContent = char === ' ' ? '\u00A0' : char; // Handle spaces
-            span.style.animationDelay = `${index * 0.05}s`; // Stagger delay
-            textElement.appendChild(span);
+    // --- === Button Particle Effect === ---
+    document.querySelectorAll('.futuristic-btn').forEach(button => {
+        const particleContainer = button.querySelector('.btn-particles');
+        if (particleContainer) {
+            button.addEventListener('mouseenter', () => {
+                // Create and animate particles
+                for (let i = 0; i < 8; i++) { // Match number of <i> tags
+                    const p = particleContainer.children[i];
+                    if (p) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = Math.random() * 30 + 20; // Travel distance
+                        p.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                        p.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                        // CSS handles the animation via :hover on parent
+                    }
+                }
+            });
+        }
+    });
+
+    // --- === Magnetic Elements (Conceptual - Needs a library or more complex math) === ---
+    // This is a simplified placeholder. Real magnetic effects are complex.
+    document.querySelectorAll('.magnetic-link, .social-magnetic, .btn-magnetic, .magnetic-link-sm').forEach(el => {
+        el.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            // Simple movement, real magnetic is non-linear
+            this.style.transform = `translate(${x * 0.15}px, ${y * 0.25}px) scale(1.05)`;
+            if (this.classList.contains('social-magnetic') || this.classList.contains('btn-magnetic')) {
+                 this.style.transform = `translate(${x * 0.2}px, ${y * 0.3}px) scale(1.1) translateZ(10px)`;
+            }
+        });
+        el.addEventListener('mouseleave', function() {
+            this.style.transform = 'translate(0,0) scale(1) translateZ(0)';
         });
     });
 
-    // --- Parallax Background Scroll Effect (Simple CSS version) ---
-    // For more advanced parallax, you'd use scroll event listeners and update transform more dynamically.
-    // This example assumes the CSS animations for .bg-layer are sufficient for a subtle effect.
-    // If you want JS-driven parallax:
-    /*
+
+    // --- === Parallax Background (Simple JS version if CSS alone isn't enough) === ---
     const parallaxLayers = document.querySelectorAll('.parallax-bg .bg-layer');
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        parallaxLayers.forEach((layer, index) => {
-            const speed = (index + 1) * 0.1; // Adjust speed factor per layer
-            // Example: Layer 1 (farthest) moves slower
-            // Layer 1: speed = 0.1, Layer 2: speed = 0.2, Layer 3: speed = 0.3
-            const yPos = -(scrollTop * speed);
-            // layer.style.transform = `translateY(${yPos}px) scale(1.1)`; // Ensure scale covers movement
+    if (parallaxLayers.length > 0 && !isTouchDevice()){ // Don't run on touch for performance
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            parallaxLayers.forEach(layer => {
+                const speed = parseFloat(layer.style.getPropertyValue('--parallax-speed')) || 2; // Get speed from CSS custom prop or default
+                const yPos = -(scrollTop / speed);
+                layer.style.transform = `translateY(${yPos}px) scale(${layer.style.transform.includes('scale') ? layer.style.transform.split('scale(')[1].split(')')[0] : '1'})`; // Maintain existing scale
+            });
+        });
+    }
+
+    // --- === Scroll to Top Button === ---
+    const scrollToTopBtn = document.getElementById('scroll-to-top');
+    if (scrollToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+        // Click event handled by href="#preloader" or similar top anchor
+    }
+
+    // --- === Matrix Background Canvas (for .matrix-bg-v2) === ---
+    const matrixCanvases = document.querySelectorAll('.matrix-bg-v2');
+    matrixCanvases.forEach(container => {
+        const canvas = document.createElement('canvas');
+        container.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*()*&^%+-/~{[|`?..<!';
+        const fontSize = 12;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(25, 26, 33, 0.1)'; // Fading effect, matches --background-main
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(var(--accent-color-rgb), 0.7)'; // Green characters
+            ctx.font = `${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-code').trim() || 'monospace'}`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        let matrixInterval = setInterval(drawMatrix, 50); // Adjust speed
+
+        // Resize handling (basic)
+        window.addEventListener('resize', () => {
+            clearInterval(matrixInterval);
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+            // Recalculate columns and drops if necessary
+            const newColumns = canvas.width / fontSize;
+            drops.length = 0; // Clear old drops
+            for(let i=0; i < Math.floor(newColumns); i++) drops.push(1); // Reinitialize
+            matrixInterval = setInterval(drawMatrix, 50);
         });
     });
-    */
-    // Note: JS parallax can be jittery if not optimized (e.g., using requestAnimationFrame)
-    // The current CSS version uses animations for movement, which is smoother but not scroll-tied.
-});
+
+
+    // --- Helper: Check for touch device ---
+    function isTouchDevice() {
+        return ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    }
+
+    // Initial scroll to handle active nav if page loads on a hash
+    if (window.location.hash) {
+        const targetElement = document.querySelector(window.location.hash);
+        if (targetElement) {
+            setTimeout(() => { // Allow layout to settle
+                 targetElement.scrollIntoView({ behavior: 'auto', block: 'start' }); // 'auto' for initial load
+                 scrollActiveNav(); // Update nav
+            }, 100); // Small delay
+        }
+    } else {
+        scrollActiveNav(); // Check active nav for top of page
+    }
+
+}); // End DOMContentLoaded
+// --- === Preloader === ---
+const preloader = document.getElementById('preloader');
+const progressBar = preloader?.querySelector('.progress-bar'); // Optional progress bar
+if (preloader) { // Check if preloader exists
+    // ... (progress bar logic if you have one) ...
+
+    // Simplified timeout for preloader hiding, adjust time as needed
+    // This timeout should be long enough for initial assets and for the main container animation delay
+    const preloaderHideDelay = 3500; // Matches your container animation-delay
+
+    setTimeout(() => {
+        preloader.classList.add('loaded');
+        // body.classList.remove('no-scroll'); // If you use a class to prevent scroll during preload
+    }, preloaderHideDelay);
+
+} else {
+    // body.classList.remove('no-scroll');
+}
