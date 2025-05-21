@@ -1,5 +1,17 @@
 /* --- === Global Resets & Root Variables === --- */
 :root {
+        --primary-color: #8be9fd;
+    --accent-color: #50fa7b;
+    --accent-hot-color: #ff79c6;
+    --text-color-muted: #c4cce4;
+    --border-color-rgb: 68, 71, 90; /* Assuming this is (R, G, B) for var(--border-color) */
+    --font-display: 'Orbitron', sans-serif;
+    --font-tech: 'Electrolize', sans-serif;
+    --text-heading-gradient: linear-gradient(120deg, var(--primary-color), var(--accent-color));
+    --spacing-unit: 8px;
+    --transition-smooth: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-elastic: 0.6s cubic-bezier(0.68, -0.6, 0.27, 1.65);
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     /* Core Palette (Dracula Inspired & Expanded) */
     --primary-color: #8be9fd;       /* Cyan */
     --secondary-color: #bd93f9;     /* Purple */
@@ -222,180 +234,250 @@ body::after { /* Global noise overlay */
     padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 3);
     position: relative;
     z-index: 1;
-    opacity: 0;
-    transform: translateY(50px) rotateX(-10deg) scale(0.95);
-    transform-origin: top center;
+        opacity: 0;
+    transform: translateY(30px); /* Or your preferred entry transform */
     animation: dropInContainer 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-    animation-delay: 0.1s; /* After preloader finishes */
-    will-change: transform, opacity;
-    transition: transform 0.5s var(--transition-smooth); /* For subtle mouse follow */
+    animation-delay: 0.1s; /* Short delay for container itself */
 }
 @keyframes dropInContainer {
     to {
         opacity: 1;
-        transform: translateY(0) rotateX(0deg) scale(1);
+        transform: translateY(0);
     }
 }
-/* Optional: Subtle mouse follow for the whole container */
-/* JS would update --mouse-x-container and --mouse-y-container */
-/*
-.container {
-    transform: rotateX(calc(var(--mouse-y-container, 0) * -0.01deg))
-               rotateY(calc(var(--mouse-x-container, 0) * 0.01deg));
-}
-*/
 
-/* --- === Header & Navigation === --- */
+
+/* --- === Site Header Section === --- */
 .site-header {
     text-align: center;
-    margin-bottom: calc(var(--spacing-unit) * 8);
-    padding: calc(var(--spacing-unit) * 4) 0;
+    margin-bottom: calc(var(--spacing-unit) * 7); /* Adjusted from 8 */
+    padding: calc(var(--spacing-unit) * 3) 0;    /* Adjusted from 4 */
     position: relative;
-    border-bottom: 1px solid rgba(var(--border-color-rgb), 0.2);
+    border-bottom: 1px solid rgba(var(--border-color-rgb), 0.25); /* Slightly more visible */
 }
-.site-header::before, .site-header::after { /* Decorative border elements */
+
+/* Decorative lines for the header border */
+.site-header::before,
+.site-header::after {
     content: '';
     position: absolute;
     height: 2px;
     background: var(--accent-color);
-    box-shadow: 0 0 10px var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-color); /* Soft glow */
+
+    /* Initial State (for animation) */
     opacity: 0;
-    animation: drawHeaderLine 1.5s var(--transition-smooth) forwards;
-    animation-delay: 0.3s; /* After container drop-in */
+    width: 0;
+
+    animation: drawHeaderLine 1.2s var(--transition-smooth) forwards;
 }
-.site-header::before { top: -1px; left: 0; width: 0; }
-.site-header::after { bottom: -1px; right: 0; width: 0; animation-delay: 0.4s; }
+
+.site-header::before {
+    top: -1px; /* Position on the border */
+    left: 0;
+    animation-delay: 0.3s; /* Start after container begins appearing */
+}
+
+.site-header::after {
+    bottom: -1px; /* Position on the border */
+    right: 0;
+    animation-delay: 0.4s; /* Slightly after the first line */
+}
 
 @keyframes drawHeaderLine {
-    to { width: 25%; opacity: 0.7; }
+    to {
+        width: 30%; /* How far the line draws in */
+        opacity: 0.8;
+    }
 }
 
+/* Logo Container and Characters ("AB") */
 .logo-container.animated-logo {
-    display: inline-flex;
-    margin-bottom: var(--spacing-unit);
-    cursor: auto; /* Or pointer if it links home */
+    display: inline-flex; /* Aligns characters side-by-side */
+    margin-bottom: calc(var(--spacing-unit) * 1.5); /* Space below logo */
 }
+
 .header-logo-char {
     font-family: var(--font-display);
-    font-size: 2.5rem;
+    font-size: 2.8rem; /* Slightly larger */
     color: var(--primary-color);
     font-weight: 900;
-    text-shadow: 0 0 10px var(--primary-color), 0 0 5px #fff;
-    padding: 0 2px;
+    text-shadow: 0 0 12px var(--primary-color), 0 0 6px #fff; /* Enhanced glow */
+    padding: 0 3px; /* Spacing between A and B */
     display: inline-block;
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+
+    /* Initial State (for animation) */
     opacity: 0;
-    transform: translateY(-20px) rotateY(90deg);
-    animation: flipInLogoChar 0.6s var(--transition-elastic) forwards;
-    animation-delay: calc(0.4s + var(--i) * 0.15s); /* Staggered animation after header lines */
-}
-.header-logo-char:hover {
-    color: var(--accent-hot-color);
-    text-shadow: 0 0 15px var(--accent-hot-color), 0 0 8px #fff;
-    transform: scale(1.1) rotateZ(5deg);
-}
-@keyframes flipInLogoChar {
-    to { opacity: 1; transform: translateY(0) rotateY(0deg); }
+    transform: translateY(-25px) rotateY(90deg) scale(0.8);
+
+    animation: flipInLogoChar 0.7s var(--transition-elastic) forwards;
+    /* Staggered animation delay, starting after header lines */
+    animation-delay: calc(0.5s + var(--i) * 0.18s); /* --i is 0 for A, 1 for B from HTML */
 }
 
+.header-logo-char:hover {
+    color: var(--accent-hot-color);
+    text-shadow: 0 0 18px var(--accent-hot-color), 0 0 10px #fff;
+    transform: scale(1.15) rotateZ(3deg) translateY(-2px); /* More playful hover */
+}
+
+@keyframes flipInLogoChar {
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateY(0deg) scale(1);
+    }
+}
+
+/* Main Title ("Abhinit Barua") */
 .main-title {
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    font-size: clamp(2.8rem, 7vw, 4.8rem); /* Slightly larger clamp */
+    font-weight: 900;
+    letter-spacing: 2.5px; /* Slightly more spacing */
+    margin-bottom: calc(var(--spacing-unit) * 1.5); /* Space below title */
+    position: relative; /* For any potential future pseudo-elements */
+
+    /* Gradient Text */
     background: var(--text-heading-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-fill-color: transparent;
-    margin-bottom: var(--spacing-unit);
-    font-weight: 900;
-    letter-spacing: 2px;
-    position: relative;
-    animation: mainTitleReveal 1s var(--transition-smooth) forwards; /* After logo */
-    animation-delay: 0.6s;
+    text-fill-color: transparent; /* Fallback for browsers not supporting -webkit prefix */
+
+    /* Initial State (for animation) */
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px) scale(0.95);
+
+    animation: mainTitleReveal 1s var(--transition-smooth) forwards;
+    animation-delay: 0.8s; /* Start after logo characters are mostly in */
 }
-@keyframes mainTitleReveal {
-    to { opacity: 1; transform: translateY(0); }
-}
-.main-title > span { /* For glitch parent */
-    position: relative;
-    -webkit-text-fill-color: transparent; /* Ensure this is on the span too for glitch */
+/* The span inside main-title is optional if only for glitch. If kept for other reasons: */
+.main-title > span {
+    display: inline-block; /* Useful if you add transforms or other effects directly to span */
 }
 
+@keyframes mainTitleReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Subtitle ("Digital Architect & Tech Innovator") */
 .sub-title {
     font-family: var(--font-tech);
-    font-size: 1.2rem;
+    font-size: 1.25rem; /* Slightly larger */
     color: var(--text-color-muted);
-    letter-spacing: 1px;
+    letter-spacing: 1.5px; /* More spacing */
     margin-bottom: calc(var(--spacing-unit) * 4);
     text-transform: uppercase;
+
+    /* Initial State (for animation) */
     opacity: 0;
-    transform: translateY(10px);
-    animation: subTitleReveal 1s var(--transition-smooth) 4.2s forwards;
+    transform: translateY(15px);
+
+    animation: subTitleReveal 1s var(--transition-smooth) forwards;
+    animation-delay: 1.0s; /* Start after main title is mostly in */
 }
-.sub-title::before, .sub-title::after {
-    content: "//";
+/* Optional decorative elements for subtitle if desired */
+.sub-title::before,
+.sub-title::after {
+    content: "//"; /* Or any other character like "[ " and " ]" */
     color: var(--accent-color);
-    opacity: 0.6;
-    margin: 0 8px;
-    font-weight: bold;
+    opacity: 0.7;
+    margin: 0 10px; /* Space around the text */
+    font-weight: normal; /* Don't make it too bold */
 }
+
 @keyframes subTitleReveal {
-    to { opacity: 1; transform: translateY(0); }
+    to {
+        opacity: 0.9; /* Slightly less than full opacity for subtlety */
+        transform: translateY(0);
+    }
+}
+
+/* Main Navigation */
+.main-nav {
+    margin-top: calc(var(--spacing-unit) * 2); /* Add some space above nav */
 }
 
 .main-nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: calc(var(--spacing-unit) * 1); /* Slightly reduced gap */
-    flex-wrap: wrap;
-    opacity: 0; transform: translateY(10px);
-    animation: navReveal 1s var(--transition-smooth) 0.4s forwards;
-    animation-delay: 1.0s;
+    gap: calc(var(--spacing-unit) * 1.5); /* Space between nav items */
+    flex-wrap: wrap; /* Allow nav items to wrap on smaller screens */
+
+    /* Initial State (for animation) */
+    opacity: 0;
+    transform: translateY(15px);
+
+    animation: navReveal 1s var(--transition-smooth) forwards;
+    animation-delay: 1.2s; /* Start after subtitle is mostly in */
 }
+
 @keyframes navReveal {
-    to { opacity: 1; transform: translateY(0); }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .nav-link {
     font-family: var(--font-tech);
     text-decoration: none;
     color: var(--text-color-muted);
-    font-weight: 600;
-    font-size: 1.05em;
-    padding: 12px 20px;
-    position: relative;
-    transition: color var(--transition-fast), transform var(--transition-fast);
-    overflow: hidden;
-    border-radius: var(--border-radius-sm);
-    letter-spacing: 0.5px;
+    font-weight: 600; /* Was 700, can adjust */
+    font-size: 1.1em; /* Consistent size */
+    padding: 12px 18px; /* Padding around text */
+    position: relative; /* For the ::after pseudo-element and .nav-link-deco */
+    display: inline-block; /* Ensures padding and ::after work correctly */
+    overflow: hidden; /* If using complex bg animations on hover */
+    border-radius: var(--border-radius-sm); /* Subtle rounding */
+    letter-spacing: 0.8px;
     text-transform: uppercase;
+    transition: color var(--transition-fast), transform var(--transition-fast);
 }
-.nav-link span { position: relative; z-index: 1; display: inline-block; }
-.nav-link .nav-link-deco { /* Shape/line animation */
+
+.nav-link span { /* The text itself */
+    position: relative;
+    z-index: 1; /* Above .nav-link-deco */
+    display: inline-block; /* For potential transforms on text */
+}
+
+.nav-link .nav-link-deco { /* The underline/shape effect */
     position: absolute;
     z-index: 0;
-    bottom: 5px; left: 50%;
-    transform: translateX(-50%);
-    width: 0%; height: 2px;
+    bottom: 6px; /* Position from bottom */
+    left: 50%;
+    transform: translateX(-50%); /* Center it */
+    width: 0%; /* Initial width for animation */
+    height: 2.5px; /* Thickness */
     background: var(--accent-color);
     border-radius: 1px;
-    transition: width var(--transition-smooth), background-color var(--transition-smooth);
-    box-shadow: 0 0 8px var(--accent-color);
+    box-shadow: 0 0 7px var(--accent-color);
+    transition: width 0.4s var(--transition-smooth), background-color 0.3s var(--transition-smooth);
 }
-.nav-link:hover, .nav-link:focus, .nav-link.active { /* .active class from JS */
-    color: var(--text-color);
-    transform: translateY(-2px);
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link.active { /* .active class can be added by JS for current page */
+    color: var(--text-color); /* Brighter text on hover/focus */
+    transform: translateY(-3px); /* Slight lift */
 }
+
 .nav-link:hover .nav-link-deco,
 .nav-link:focus .nav-link-deco,
 .nav-link.active .nav-link-deco {
-    width: calc(100% - 20px); /* Adjust width to not overlap padding */
-    background: var(--accent-hot-color);
+    width: calc(100% - 24px); /* Make underline slightly shorter than text padding */
+    background: var(--accent-hot-color); /* Change color on hover */
     box-shadow: 0 0 10px var(--accent-hot-color);
 }
-.nav-link:active span { transform: translateY(1px); }
+
+.nav-link:active span {
+    transform: translateY(1px); /* Slight press down effect */
+}
 
 
 /* --- === Main Content & Sections === --- */
