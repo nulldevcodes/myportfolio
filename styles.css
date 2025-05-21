@@ -1,0 +1,1099 @@
+/* --- Global Resets & Root Variables --- */
+:root {
+    --primary-color: #8be9fd; /* Dracula Cyan */
+    --secondary-color: #bd93f9; /* Dracula Purple */
+    --accent-color: #50fa7b; /* Dracula Green */
+    --danger-color: #ff5555; /* Dracula Red */
+    --warning-color: #f1fa8c; /* Dracula Yellow */
+    --background-color: #1d1e26; /* Darker than Dracula Background for depth */
+    --surface-color: #282a36; /* Dracula Background (for cards) */
+    --text-color: #f8f8f2; /* Dracula Foreground */
+    --text-color-muted: #b0b8c4; /* Lighter gray */
+    --border-color: #44475a; /* Dracula Current Line */
+    --glow-color: var(--accent-color);
+    --glow-color-secondary: var(--secondary-color);
+
+    --font-primary: 'Poppins', sans-serif;
+    --font-display: 'Orbitron', sans-serif; /* For futuristic headings */
+    --font-code: 'Roboto Mono', monospace;
+
+    --border-radius-sm: 6px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 20px;
+
+    --shadow-sm: 0 2px 10px rgba(0,0,0,0.3);
+    --shadow-md: 0 8px 25px rgba(0,0,0,0.4), 0 0 0 1px rgba(var(--border-color-rgb), 0.5);
+    --shadow-lg: 0 15px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(var(--glow-color-rgb), 0.2);
+
+    /* For color conversion to RGB for rgba() alpha */
+    --accent-color-rgb: 80, 250, 123;
+    --secondary-color-rgb: 189, 147, 249;
+    --border-color-rgb: 68, 71, 90;
+    --surface-color-rgb: 40, 42, 54;
+
+    --transition-fast: 0.2s ease-out;
+    --transition-smooth: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-elastic: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) var(--surface-color);
+}
+
+/* Custom Scrollbar for Webkit */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--surface-color);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 10px;
+    border: 2px solid var(--surface-color);
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-color);
+}
+
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px; /* Base font size */
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.7;
+    overflow-x: hidden; /* Critical for preventing horizontal scroll with animations */
+    position: relative; /* For preloader and parallax */
+}
+
+/* --- Preloader --- */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.8s var(--transition-smooth), visibility 0.8s var(--transition-smooth);
+    opacity: 1;
+    visibility: visible;
+}
+#preloader.loaded {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.loader-content {
+    text-align: center;
+}
+.loader-logo {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    color: var(--accent-color);
+    font-weight: 900;
+    animation: pulseLogo 2s infinite ease-in-out, rotateLogo 10s linear infinite;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.7),
+                 0 0 30px rgba(var(--accent-color-rgb), 0.5);
+}
+@keyframes pulseLogo {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+@keyframes rotateLogo {
+    from { transform: rotateY(0deg) scale(1); }
+    to   { transform: rotateY(360deg) scale(1); }
+}
+.loader-text {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    animation: textFlicker 3s linear infinite;
+}
+@keyframes textFlicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow:
+      0 0 4px var(--primary-color),
+      0 0 11px var(--primary-color),
+      0 0 19px var(--primary-color),
+      0 0 40px var(--accent-color),
+      0 0 80px var(--accent-color),
+      0 0 90px var(--accent-color),
+      0 0 100px var(--accent-color),
+      0 0 150px var(--accent-color);
+  }
+  20%, 24%, 55% { text-shadow: none; }
+}
+.progress-bar-container {
+    width: 250px;
+    height: 10px;
+    background-color: var(--border-color);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+}
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    border-radius: var(--border-radius-sm);
+    animation: loadingProgress 2.5s ease-out forwards 0.5s; /* JS will trigger 'loaded' class */
+}
+@keyframes loadingProgress {
+    to { width: 100%; }
+}
+
+
+/* --- Parallax Background Layers --- */
+.parallax-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Behind content */
+    overflow: hidden; /* Important */
+}
+.bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    will-change: transform; /* Performance hint */
+}
+.layer-1 {
+    /* Farthest, slowest moving layer - subtle gradient or very large image */
+    background: radial-gradient(ellipse at bottom, #0d1018 0%, #141822 60%, #1d1e26 100%);
+    animation: slowPan 120s linear infinite alternate;
+    transform: scale(1.1); /* Ensure no edges show on pan */
+}
+@keyframes slowPan {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+.layer-2 {
+    /* Mid-ground - subtle texture or pattern */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%2322242d" width="100" height="100"/><path d="M0 50 L50 0 L100 50 L50 100 Z" fill-opacity="0.03" fill="%23f8f8f2"/></svg>');
+    background-size: 50px 50px; /* Smaller for density */
+    opacity: 0.1;
+    animation: subtleShift 60s linear infinite;
+    /* JavaScript would typically update transform based on scroll for true parallax */
+}
+@keyframes subtleShift {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(10px, 5px); }
+    50% { transform: translate(0, 10px); }
+    75% { transform: translate(-10px, 5px); }
+    100% { transform: translate(0, 0); }
+}
+.layer-3 {
+    /* Foreground particles/stars - using pseudo elements to create many */
+    /* This will be done with JS-aided CSS or pure CSS repeating gradients if possible */
+    /* For now, a placeholder or simpler effect */
+    opacity: 0.6;
+}
+/* Simple CSS Starfield (can be expanded) */
+.layer-3::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image:
+        radial-gradient(1px 1px at 20% 30%, var(--text-color-muted), transparent),
+        radial-gradient(1px 1px at 80% 10%, var(--primary-color), transparent),
+        radial-gradient(1px 1px at 50% 70%, var(--text-color-muted), transparent),
+        radial-gradient(2px 2px at 30% 90%, var(--accent-color), transparent),
+        radial-gradient(1px 1px at 70% 50%, var(--secondary-color), transparent),
+        radial-gradient(1px 1px at 10% 80%, var(--text-color-muted), transparent),
+        radial-gradient(2px 2px at 90% 60%, var(--primary-color), transparent);
+    background-size: 100% 100%; /* Static stars for now */
+    animation: twinkleStars 10s infinite linear alternate;
+}
+@keyframes twinkleStars {
+    0% { opacity: 0.5; }
+    100% { opacity: 0.9; }
+}
+
+
+/* --- Main Container --- */
+.container {
+    max-width: 950px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative; /* For stacking context if needed */
+    z-index: 1;
+    opacity: 0;
+    animation: fadeInContainer 1s 2.8s ease-out forwards; /* Delayed for preloader */
+}
+@keyframes fadeInContainer {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Header & Navigation --- */
+header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 30px 0;
+    position: relative;
+    border-bottom: 1px solid rgba(var(--border-color-rgb), 0.3);
+}
+header::before, header::after { /* Decorative lines */
+    content: '';
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    left: 50%;
+    transform: translateX(-50%);
+    animation: lineAnim 5s infinite linear;
+}
+header::before { top: 0; width: 30%; }
+header::after { bottom: -1px; width: 50%; animation-delay: -2.5s; }
+
+@keyframes lineAnim {
+    0% { width: 0%; opacity: 0; }
+    50% { width: 60%; opacity: 1; }
+    100% { width: 0%; opacity: 0; transform: translateX(-50%) scaleX(2); }
+}
+
+header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 3.5rem); /* Responsive font size */
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(var(--primary-color-rgb, 139, 233, 253), 0.5), /* Default RGB for safety */
+                 0 0 20px rgba(var(--primary-color-rgb, 139, 233, 253), 0.3);
+    position: relative;
+    display: inline-block;
+    padding: 0 10px;
+}
+
+/* Glitch Effect for H1 */
+.glitch {
+    position: relative;
+    animation: glitch-skew 1s infinite linear alternate-reverse;
+}
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-color); /* Match body to hide text */
+    overflow: hidden;
+}
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--danger-color);
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--accent-color), 2px 2px var(--secondary-color);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-skew {
+  0% { transform: skewX(0deg); }
+  10% { transform: skewX(2deg); }
+  20% { transform: skewX(-1deg); }
+  /* ... more steps ... */
+  100% { transform: skewX(0deg); }
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); }
+  /* ... more clip-path steps ... */
+  100% { clip-path: polygon(0 80%, 100% 80%, 100% 83%, 0 83%); }
+}
+@keyframes glitch-anim-2 {
+  0% { clip-path: polygon(0 60%, 100% 60%, 100% 63%, 0 63%); }
+  /* ... more clip-path steps ... */
+  100% { clip-path: polygon(0 15%, 100% 15%, 100% 18%, 0 18%); }
+}
+
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Reduced gap for new style */
+    flex-wrap: wrap;
+}
+
+nav .nav-link {
+    text-decoration: none;
+    color: var(--text-color-muted);
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 10px 0; /* Padding for underline effect */
+    position: relative;
+    transition: color var(--transition-fast);
+    overflow: hidden; /* For span animation */
+}
+nav .nav-link span {
+    position: relative;
+    display: inline-block;
+    transition: transform var(--transition-smooth);
+}
+nav .nav-link::before { /* Underline effect */
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: all var(--transition-smooth);
+    transform: translateX(-50%);
+}
+nav .nav-link:hover span, nav .nav-link:focus span {
+    transform: translateY(-3px) scale(1.05);
+    color: var(--accent-color);
+}
+nav .nav-link:hover::before, nav .nav-link:focus::before {
+    width: 100%;
+}
+nav .nav-link:active span {
+    transform: translateY(-1px) scale(1);
+}
+
+/* --- Main Content & Sections --- */
+main {
+    margin-top: 40px;
+}
+
+/* --- Cards --- */
+/* --- Cards --- */
+.card {
+    background: rgba(var(--surface-color-rgb), 0.85); /* Slightly more opaque */
+    backdrop-filter: blur(15px) saturate(150%);
+    -webkit-backdrop-filter: blur(15px) saturate(150%);
+    padding: 35px 40px;
+    margin-bottom: 50px; /* Increased spacing */
+    border-radius: var(--border-radius-lg); /* Larger radius */
+    border: 1px solid rgba(var(--border-color-rgb), 0.4);
+    box-shadow: var(--shadow-md);
+    position: relative; /* For pseudo-elements and glow */
+    overflow: hidden; /* Important for ::before/::after effects */
+    transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-smooth);
+    will-change: transform, box-shadow; /* Performance hint */
+}
+
+/* Interactive Card Hover Effects */
+.interactive-card::before { /* Border animation */
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border-radius: var(--border-radius-lg);
+    padding: 2px; /* Thickness of the animated border */
+    background: conic-gradient(from var(--angle, 0deg),
+        transparent 20%,
+        var(--secondary-color),
+        var(--accent-color),
+        transparent 80%);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: subtract;
+    animation: rotateBorder 6s linear infinite paused; /* Paused initially */
+    opacity: 0;
+    transition: opacity var(--transition-smooth);
+    pointer-events: none; /* Allow clicks through */
+}
+@property --angle { /* For CSS Houdini animation if supported */
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes rotateBorder {
+    to { --angle: 360deg; }
+}
+
+.interactive-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(var(--accent-color-rgb), 0.5);
+}
+.interactive-card:hover::before {
+    animation-play-state: running;
+    opacity: 1;
+}
+
+/* Card Glow Effect (Subtle) */
+.card-glow {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border-radius: var(--border-radius-lg);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-smooth);
+    background: radial-gradient(circle at var(--mouse-x) var(--mouse-y),
+                                rgba(var(--glow-color-rgb), 0.15) 0%,
+                                rgba(var(--glow-color-rgb), 0.05) 30%,
+                                transparent 70%);
+}
+.interactive-card:hover .card-glow {
+    opacity: 1;
+}
+
+
+.card h2.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    position: relative;
+    display: inline-block; /* For ::after to be positioned correctly */
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(var(--primary-color-rgb, 139, 233, 253), 0.3);
+}
+.section-title span { /* For text animation */
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
+.section-title::before { /* Text background effect */
+    content: attr(data-content);
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-color);
+    z-index: 0;
+    opacity: 0.4;
+    transform: skewX(-15deg) translateX(-10px);
+    transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+    text-shadow: none;
+}
+.section-title::after { /* Underline accent */
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+    border-radius: 2px;
+    transition: width var(--transition-elastic) 0.1s;
+}
+.card:hover h2.section-title::after, .card:focus-within h2.section-title::after { /* focus-within for accessibility */
+    width: 100%;
+}
+.card:hover h2.section-title::before {
+    transform: skewX(0deg) translateX(0px) scale(1.05);
+    opacity: 0.1;
+}
+
+.card p {
+    font-size: 1.05em;
+    color: var(--text-color-muted);
+    margin-bottom: 20px;
+    line-height: 1.8;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.card p strong {
+    color: var(--text-color);
+    font-weight: 600;
+}
+.card a { /* General links inside cards */
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+}
+.card a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    display: block;
+    margin-top: 2px;
+    right: 0;
+    background: var(--accent-color);
+    transition: width .3s ease;
+    -webkit-transition: width .3s ease;
+}
+.card a:hover::after {
+    width: 100%;
+    left: 0;
+    background: var(--secondary-color);
+}
+
+/* --- Buttons --- */
+.button-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.btn {
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: var(--border-radius-md);
+    font-weight: 700;
+    font-size: 1.05em;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-smooth);
+    border: 2px solid transparent;
+    cursor: pointer;
+    display: inline-flex; /* For aligning icon and text */
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden; /* For glare and other effects */
+    text-transform: uppercase;
+    box-shadow: var(--shadow-sm);
+    will-change: transform, box-shadow;
+}
+.btn span { /* For text to be above pseudo elements */
+    position: relative;
+    z-index: 1;
+}
+
+/* Futuristic Button Style */
+.futuristic-btn {
+    background: linear-gradient(45deg, var(--surface-color), lighten(var(--surface-color), 5%));
+    border-color: var(--border-color);
+    color: var(--primary-color);
+    text-shadow: 0 0 5px rgba(var(--primary-color-rgb, 139, 233, 253), 0.3);
+}
+.futuristic-btn::before, .futuristic-btn::after { /* Corner accents */
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    transition: all var(--transition-smooth);
+    opacity: 0.7;
+}
+.futuristic-btn::before {
+    top: -2px; left: -2px;
+    border-top: 2px solid var(--accent-color);
+    border-left: 2px solid var(--accent-color);
+}
+.futuristic-btn::after {
+    bottom: -2px; right: -2px;
+    border-bottom: 2px solid var(--accent-color);
+    border-right: 2px solid var(--accent-color);
+}
+
+.futuristic-btn:hover, .futuristic-btn:focus {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 5px 15px rgba(var(--accent-color-rgb), 0.2);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    text-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.5);
+}
+.futuristic-btn:hover::before, .futuristic-btn:focus::before {
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    opacity: 1;
+}
+.futuristic-btn:hover::after, .futuristic-btn:focus::after {
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    opacity: 1;
+}
+
+/* Button Glare Effect */
+.btn-glare {
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 50px;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(35deg);
+    transition: left var(--transition-elastic) 0.2s; /* Delay transition for smoother exit */
+}
+.futuristic-btn:hover .btn-glare, .futuristic-btn:focus .btn-glare {
+    left: 150%;
+    transition: left var(--transition-elastic);
+}
+
+.btn-primary { /* Specific overrides if needed, but futuristic-btn is primary style now */
+    /* background: var(--accent-color); color: var(--background-color); border-color: var(--accent-color); */
+}
+.btn-primary:hover {
+    /* background: transparent; color: var(--accent-color); */
+}
+.btn-secondary {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+    text-shadow: 0 0 5px rgba(var(--secondary-color-rgb), 0.3);
+}
+.btn-secondary::before { border-color: var(--secondary-color); }
+.btn-secondary::after { border-color: var(--secondary-color); }
+
+.btn-secondary:hover, .btn-secondary:focus {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+    box-shadow: 0 5px 15px rgba(var(--secondary-color-rgb), 0.2);
+    text-shadow: 0 0 8px rgba(var(--secondary-color-rgb), 0.5);
+}
+
+
+/* --- Social Links --- */
+.social-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+.social-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    text-decoration: none;
+    color: var(--text-color-muted);
+    background-color: rgba(var(--border-color-rgb), 0.3);
+    border-radius: 50%; /* Circular icons */
+    border: 1px solid transparent;
+    transition: all var(--transition-smooth);
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+.social-icon-link i {
+    font-size: 1.5em;
+    transition: transform var(--transition-smooth), color var(--transition-fast);
+}
+.social-icon-link:hover, .social-icon-link:focus {
+    background-color: var(--surface-color);
+    color: var(--accent-color);
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    border-color: var(--accent-color);
+}
+.social-icon-link:hover i, .social-icon-link:focus i {
+    transform: rotateY(360deg) scale(1.1); /* Fun icon spin */
+    color: var(--accent-color);
+}
+
+/* Specific Social Icon Hover Colors */
+.social-icon-link[aria-label="GitHub"]:hover, .social-icon-link[aria-label="GitHub"]:focus { color: #e4e4e4; border-color: #e4e4e4; }
+.social-icon-link[aria-label="GitHub"]:hover i, .social-icon-link[aria-label="GitHub"]:focus i { color: #e4e4e4; }
+
+.social-icon-link[aria-label="Discord"]:hover, .social-icon-link[aria-label="Discord"]:focus { color: #7289DA; border-color: #7289DA; }
+.social-icon-link[aria-label="Discord"]:hover i, .social-icon-link[aria-label="Discord"]:focus i { color: #7289DA; }
+
+.social-icon-link[aria-label="Email"]:hover, .social-icon-link[aria-label="Email"]:focus { color: #EA4335; border-color: #EA4335; }
+.social-icon-link[aria-label="Email"]:hover i, .social-icon-link[aria-label="Email"]:focus i { color: #EA4335; }
+
+.social-icon-link[aria-label="Reddit"]:hover, .social-icon-link[aria-label="Reddit"]:focus { color: #FF4500; border-color: #FF4500; }
+.social-icon-link[aria-label="Reddit"]:hover i, .social-icon-link[aria-label="Reddit"]:focus i { color: #FF4500; }
+
+.social-icon-link[aria-label="GitLab"]:hover, .social-icon-link[aria-label="GitLab"]:focus { color: #FC6D26; border-color: #FC6D26; }
+.social-icon-link[aria-label="GitLab"]:hover i, .social-icon-link[aria-label="GitLab"]:focus i { color: #FC6D26; }
+
+
+/* Tooltips for Social Icons */
+.tooltip {
+    position: absolute;
+    bottom: 120%; /* Position above the icon */
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.85em;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+    pointer-events: none;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+}
+.tooltip::after { /* Tooltip arrow */
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--surface-color) transparent transparent transparent;
+}
+.social-icon-link:hover .tooltip, .social-icon-link:focus .tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+    bottom: 130%; /* Move slightly further up */
+}
+
+
+/* --- Placeholder Sections (Further Styling) --- */
+.placeholder-section {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content for placeholder */
+    justify-content: center; /* Center content for placeholder */
+    text-align: center;
+}
+.placeholder-section p {
+    font-style: italic;
+    color: var(--primary-color);
+    font-size: 1.2em;
+    max-width: 70%;
+    margin-top: 10px;
+}
+
+/* Example: Matrix background for Projects section */
+.matrix-bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    z-index: -1; /* Behind content of the card */
+    opacity: 0.1; /* Very subtle */
+    pointer-events: none;
+}
+/* This would ideally be a canvas animation, but for CSS only: */
+.matrix-bg::after {
+    content: "";
+    position: absolute;
+    top: -100%; /* Start off-screen */
+    left: 0;
+    width: 100%;
+    height: 200%; /* Tall enough to scroll through */
+    font-family: var(--font-code);
+    color: var(--accent-color);
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: justify;
+    word-break: break-all;
+    white-space: pre-wrap; /* Allow wrapping */
+    animation: matrixFall 20s linear infinite;
+    /* Generating text with CSS is tricky; this is a simplified visual */
+    background: repeating-linear-gradient(
+        transparent,
+        transparent 1em,
+        var(--accent-color) 1em,
+        var(--accent-color) 1.1em
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent; /* Text is shown by the gradient background */
+    /* Some random characters - this will repeat */
+    content: "01101001 01101110 01101110 01101111 01110110 01100001 01110100 01101001 01101111 01101110 00100000 01100100 01100101 01110110 01100101 01101100 01101111 01110000 01101101 01100101 01101110 01110100 00100000 01100011 01101111 01100100 01100101 00100000 01100001 01100010 01101000 01101001 01101110 01101001 01110100 00100000 01100010 01100001 01110010 01110101 01100001 00100000 01110100 01100101 01100011 01101000 00100000 01100110 01100001 01100011 01110100 01101111 01110010 01111001";
+    /* Repeat content for density - JS would be better for true random generation */
+    transform: scaleY(-1); /* Flip it to appear falling */
+}
+@keyframes matrixFall {
+    0% { transform: translateY(0) scaleY(-1); }
+    100% { transform: translateY(100%) scaleY(-1); }
+}
+
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    margin-top: 80px;
+    padding: 40px 20px;
+    color: var(--text-color-muted);
+    border-top: 1px solid rgba(var(--border-color-rgb), 0.2);
+    background: linear-gradient(to top, rgba(var(--surface-color-rgb), 0.3), transparent);
+    position: relative;
+}
+.footer-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+footer p {
+    font-size: 0.95em;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+.footer-links {
+    margin-top: 15px;
+}
+.footer-links a {
+    color: var(--text-color-muted);
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 0.9em;
+    transition: color var(--transition-fast);
+}
+.footer-links a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+footer::before { /* Subtle top glow */
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20%;
+    height: 2px;
+    background: var(--accent-color);
+    opacity: 0.5;
+    filter: blur(3px);
+    animation: pulseFooterLine 4s infinite ease-in-out;
+}
+@keyframes pulseFooterLine {
+    0%, 100% { width: 20%; opacity: 0.3; }
+    50% { width: 30%; opacity: 0.6; }
+}
+
+
+/* --- Animations & Utility Classes --- */
+/* Fade in from bottom - can be applied to elements with JS observer */
+.animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s var(--transition-smooth), transform 0.8s var(--transition-smooth);
+}
+.animate-fade-in-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Text reveal animation */
+.text-reveal span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(10px) rotate(5deg);
+    animation: revealChar 0.5s forwards;
+}
+@keyframes revealChar {
+    to {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+}
+/* Usage: <h2 class="text-reveal"><span>A</span><span>b</span><span>o</span><span>u</span><span>t</span></h2>
+   JS would add delays to each span for staggered effect */
+
+
+/* --- Responsive Design --- */
+@media (max-width: 1024px) {
+    .container {
+        width: 95%;
+    }
+    .card {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    html { font-size: 15px; } /* Adjust base for smaller screens */
+
+    header h1 {
+        /* font-size: 2.5rem; */ /* Using clamp now */
+        letter-spacing: 1px;
+    }
+    .glitch::before, .glitch::after {
+        font-size: inherit; /* Ensure glitch text matches */
+    }
+
+    nav ul {
+        gap: 15px;
+    }
+    nav .nav-link {
+        font-size: 1em;
+        padding: 8px 0;
+    }
+
+    .card {
+        margin-bottom: 40px;
+        padding: 25px;
+    }
+    .card h2.section-title {
+        /* font-size: 2rem; */ /* Using clamp now */
+        padding-bottom: 10px;
+    }
+    .card p {
+        font-size: 1em;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .btn {
+        width: 80%;
+        max-width: 320px;
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+
+    .social-icon-link {
+        width: 45px;
+        height: 45px;
+    }
+    .social-icon-link i {
+        font-size: 1.3em;
+    }
+    .tooltip { font-size: 0.8em; padding: 5px 10px; }
+
+    .parallax-bg { /* Simplify parallax on mobile if it causes issues */
+        /* background-attachment: scroll; Disable fixed for potential performance */
+    }
+    .layer-2 { opacity: 0.05; }
+    .layer-3::before { opacity: 0.3; }
+}
+
+@media (max-width: 480px) {
+    html { font-size: 14px; }
+
+    body { padding: 0; /* Remove body padding if container handles it */ }
+    .container {
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    header { margin-bottom: 40px; padding: 20px 0; }
+    header h1 {
+        /* font-size: 1.8rem; */ /* Using clamp now */
+    }
+
+    .card {
+        padding: 20px;
+        border-radius: var(--border-radius-md);
+    }
+    .card h2.section-title {
+        /* font-size: 1.6rem; */ /* Using clamp now */
+    }
+
+    .btn {
+        width: 90%;
+        font-size: 0.95em;
+    }
+
+    .social-links { gap: 12px; }
+    .social-icon-link { width: 40px; height: 40px; }
+    .social-icon-link i { font-size: 1.2em; }
+
+    #preloader .loader-logo { font-size: 4rem; }
+    #preloader .loader-text { font-size: 1rem; }
+    #preloader .progress-bar-container { width: 200px; }
+
+    footer { margin-top: 60px; padding: 30px 15px; }
+    .footer-links a { margin: 0 8px; }
+}
+
+/* --- Print Styles (Basic) --- */
+@media print {
+    body {
+        background-color: #fff;
+        color: #000;
+        font-size: 12pt;
+    }
+    #preloader, .parallax-bg, nav, .button-group, .social-links, footer .footer-links, .interactive-card::before, .card-glow, .btn-glare, .matrix-bg {
+        display: none !important;
+    }
+    .container, header, .card, footer {
+        box-shadow: none !important;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+    header h1, .card h2.section-title {
+        color: #000;
+        text-shadow: none;
+        border-bottom: 1px solid #000;
+    }
+    .card p, .card a { color: #333; }
+    a { text-decoration: underline; color: #000; }
+}
+
+/* --- Accessibility: Focus visible --- */
+:focus-visible { /* Modern focus styling */
+    outline: 3px solid var(--accent-color);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px rgba(var(--accent-color-rgb), 0.3);
+    border-radius: var(--border-radius-sm); /* Apply to the element itself */
+}
+/* Ensure custom focus on buttons is distinct */
+.btn:focus-visible {
+    outline: none; /* Use custom border/shadow instead */
+    box-shadow: 0 0 0 3px var(--background-color), 0 0 0 6px var(--accent-color);
+}
+.social-icon-link:focus-visible {
+    outline-offset: 1px;
+     box-shadow: 0 0 0 2px var(--background-color), 0 0 0 4px var(--accent-color);
+}
+
+/* Final Touches - some more small animations or details */
+/* Pulsing dot for active nav (requires JS to add 'active' class) */
+.nav-link.active::after {
+    content: '•';
+    position: absolute;
+    bottom: -10px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--accent-color);
+    font-size: 1.5em;
+    animation: pulseDot 1.5s infinite ease-in-out;
+}
+@keyframes pulseDot {
+    0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.8); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+}
+
+/* Subtle hover effect for paragraphs or text blocks */
+section p:hover {
+     color: var(--text-color); */ /* Optional: brighten text */
+     text-shadow: 0 0 3px rgba(var(--text-color-rgb), 0.1); */ /* Very subtle glow */
+}
+
+ Adding a subtle background pattern to body if desired, instead of plain color/gradient */
+
+body {
+    background-image:
+        linear-gradient(45deg, rgba(var(--surface-color-rgb), 0.1) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(var(--surface-color-rgb), 0.1) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(var(--surface-color-rgb), 0.1) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(var(--surface-color-rgb), 0.1) 75%);
+    background-size: 60px 60px;
+    background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+    background-color: var(--background-color);
+}
+*/
