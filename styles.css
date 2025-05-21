@@ -380,6 +380,7 @@ body::after { /* Global noise overlay */
     flex-wrap: wrap;
     opacity: 0; transform: translateY(10px);
     animation: navReveal 1s var(--transition-smooth) 0.4s forwards;
+    animation-delay: 1.0s;
 }
 @keyframes navReveal {
     to { opacity: 1; transform: translateY(0); }
