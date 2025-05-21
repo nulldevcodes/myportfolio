@@ -1,43 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
 
-    // --- === Custom Cursor === ---
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorRing = document.querySelector('.cursor-ring');
-    let cursorX = 0, cursorY = 0, ringX = 0, ringY = 0;
-
-    if (cursorDot && cursorRing && !isTouchDevice()) { // Only init if not touch
-        body.classList.add('cursor-active');
-        window.addEventListener('mousemove', (e) => {
-            cursorX = e.clientX;
-            cursorY = e.clientY;
-        });
-
-        const followCursor = () => {
-            if (cursorDot && cursorRing) {
-                cursorDot.style.transform = `translate(${cursorX - cursorDot.offsetWidth / 2}px, ${cursorY - cursorDot.offsetHeight / 2}px)`;
-                ringX += (cursorX - ringX) * 0.15; // Spring effect for ring
-                ringY += (cursorY - ringY) * 0.15;
-                cursorRing.style.transform = `translate(${ringX - cursorRing.offsetWidth / 2}px, ${ringY - cursorRing.offsetHeight / 2}px)`;
-            }
-            requestAnimationFrame(followCursor);
-        };
-        requestAnimationFrame(followCursor);
-
-        const interactiveElements = 'a, button, .magnetic-link, .social-icon-link, .project-item-placeholder, .btn';
-        document.querySelectorAll(interactiveElements).forEach(el => {
-            el.addEventListener('mouseenter', () => body.classList.add('cursor-pointer'));
-            el.addEventListener('mouseleave', () => body.classList.remove('cursor-pointer'));
-        });
-
-        // Hide cursor when leaving window
-        document.addEventListener('mouseleave', () => body.classList.add('cursor-hidden'));
-        document.addEventListener('mouseenter', () => body.classList.remove('cursor-hidden'));
-    } else if (cursorDot && cursorRing) { // Hide elements if touch device
-        cursorDot.style.display = 'none';
-        cursorRing.style.display = 'none';
-    }
-
     // --- === Smooth Scroll & Active Nav === ---
     const navLinks = document.querySelectorAll('nav .nav-link, .footer-nav a');
     navLinks.forEach(anchor => {
