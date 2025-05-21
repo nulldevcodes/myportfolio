@@ -273,7 +273,7 @@ body::after { /* Global noise overlay */
 .logo-container.animated-logo {
     display: inline-flex;
     margin-bottom: var(--spacing-unit);
-    cursor: default; /* Or pointer if it links home */
+    cursor: auto; /* Or pointer if it links home */
 }
 .header-logo-char {
     font-family: var(--font-display);
@@ -684,7 +684,7 @@ main {
     letter-spacing: 1px;
     transition: all var(--transition-smooth);
     border: 2px solid transparent;
-    cursor: none; /* Use custom cursor */
+    cursor: pointer; /* Use custom cursor */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -934,7 +934,7 @@ main {
     position: relative;
     overflow: hidden;
     transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
-    cursor: none;
+    cursor: pointer;
 }
 .project-item-placeholder:hover {
     transform: scale(1.05) translateY(-5px);
