@@ -302,7 +302,7 @@ body::after { /* Global noise overlay */
     background: var(--accent-color);
     box-shadow: 0 0 10px var(--accent-color);
     opacity: 0;
-    animation: drawHeaderLine 1.5s var(--transition-smooth) forwards;
+    animation: drawHeaderLine 0.5s var(--transition-smooth) forwards;
     animation-delay: 0.5s; /* After container drop-in */
 }
 .site-header::before { top: -1px; left: 0; width: 0; }
@@ -327,8 +327,8 @@ body::after { /* Global noise overlay */
     display: inline-block;
     opacity: 0;
     transform: translateY(-20px) rotateY(90deg);
-    animation: flipInLogoChar 0.6s var(--transition-elastic) forwards;
-    animation-delay: calc(3.8s + var(--i) * 0.15s); /* Staggered animation after header lines */
+    animation: flipInLogoChar 0.2s var(--transition-elastic) forwards;
+    animation-delay: calc(0.2s + var(--i) * 0.15s); /* Staggered animation after header lines */
 }
 .header-logo-char:hover {
     color: var(--accent-hot-color);
