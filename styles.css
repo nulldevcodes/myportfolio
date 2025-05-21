@@ -268,7 +268,7 @@ body::after { /* Global noise overlay */
     transform: translateY(50px) rotateX(-10deg) scale(0.95);
     transform-origin: top center;
     animation: dropInContainer 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-    animation-delay: 3.5s; /* After preloader finishes */
+    animation-delay: 0.2s; /* After preloader finishes */
     will-change: transform, opacity;
     transition: transform 0.5s var(--transition-smooth); /* For subtle mouse follow */
 }
@@ -303,7 +303,7 @@ body::after { /* Global noise overlay */
     box-shadow: 0 0 10px var(--accent-color);
     opacity: 0;
     animation: drawHeaderLine 1.5s var(--transition-smooth) forwards;
-    animation-delay: 3.8s; /* After container drop-in */
+    animation-delay: 0.5s; /* After container drop-in */
 }
 .site-header::before { top: -1px; left: 0; width: 0; }
 .site-header::after { bottom: -1px; right: 0; width: 0; animation-delay: 4s; }
