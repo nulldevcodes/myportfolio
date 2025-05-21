@@ -3,112 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abhinit Barua - Innovator & Developer</title>
+    <title>Abhinit Barua - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Custom Cursor Elements -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+
     <!-- Preloader -->
     <div id="preloader">
+        <div class="preloader-overlay-grid"></div>
         <div class="loader-content">
-            <div class="loader-logo">AB</div>
-            <div class="loader-text">Initializing Portfolio...</div>
+            <div class="loader-logo-container">
+                 <div class="loader-logo-char" style="--char-index: 0;">A</div>
+                 <div class="loader-logo-char" style="--char-index: 1;">B</div>
+            </div>
+            <div class="loader-text" data-text="Booting Systems... Accessing Portfolio Matrix...">Booting Systems... Accessing Portfolio Matrix...</div>
             <div class="progress-bar-container">
                 <div class="progress-bar"></div>
             </div>
+            <div class="loader-subtext">Stand by for innovation.</div>
         </div>
     </div>
 
     <!-- Parallax Background Layers -->
     <div class="parallax-bg">
-        <div class="bg-layer layer-1"></div>
-        <div class="bg-layer layer-2"></div>
-        <div class="bg-layer layer-3"></div> <!-- Starfield/Particles -->
+        <div class="bg-layer layer-1" style="--parallax-speed: 5;"></div> <!-- Deep space nebula -->
+        <div class="bg-layer layer-2" style="--parallax-speed: 10;"></div> <!-- Faint tech grid -->
+        <div class="bg-layer layer-3" style="--parallax-speed: 18;"></div> <!-- Particle/starfield -->
+        <div class="bg-layer layer-4"></div> <!-- Animated Scanlines / Noise overlay -->
     </div>
 
-    <div class="container">
-        <header>
-            <div class="logo-container">
-                <!-- Optional: A small animated logo here -->
-                <!-- <span class="logo-char">A</span><span class="logo-char">B</span> -->
-            </div>
-            <h1 class="glitch" data-text="Abhinit Barua's Portfolio">Abhinit Barua's Portfolio</h1>
-            <nav>
-                <ul>
-                    <li><a href="#about" class="nav-link"><span>About</span></a></li>
-                    <li><a href="#actions" class="nav-link"><span>Explore</span></a></li>
-                    <li><a href="#socials" class="nav-link"><span>Connect</span></a></li>
-                    <!-- Add more links as sections are built -->
-                </ul>
-            </nav>
-        </header>
+    <div class="container-wrapper"> {/* Added for perspective on the whole container */}
+        <div class="container">
+            <header class="site-header">
+                <div class="logo-container animated-logo">
+                     <span class="header-logo-char" data-char="A" style="--i:0">A</span><span class="header-logo-char" data-char="B" style="--i:1">B</span>
+                </div>
+                <h1 class="glitch main-title" data-text="Abhinit Barua"><span>Abhinit Barua</span></h1>
+                <p class="sub-title" data-text="Digital Architect & Tech Innovator">Digital Architect & Tech Innovator</p>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="#about" class="nav-link magnetic-link"><span>About</span><div class="nav-link-deco"></div></a></li>
+                        <li><a href="#actions" class="nav-link magnetic-link"><span>Explore</span><div class="nav-link-deco"></div></a></li>
+                        <li><a href="#projects-section" class="nav-link magnetic-link"><span>Projects</span><div class="nav-link-deco"></div></a></li>
+                        <li><a href="#skills-section" class="nav-link magnetic-link"><span>Skills</span><div class="nav-link-deco"></div></a></li>
+                        <li><a href="#socials" class="nav-link magnetic-link"><span>Connect</span><div class="nav-link-deco"></div></a></li>
+                    </ul>
+                </nav>
+            </header>
 
-        <main>
-            <section id="about" class="card interactive-card">
-                <div class="card-glow"></div>
-                <h2 class="section-title" data-content="About Me"><span>About Me</span></h2>
-                <p>Welcome to the official portfolio of Abhinit Barua, a 14-year-old full-stack developer, tech innovator, and the creative mind behind The Tech Factory. From a young age, I developed a passion for creating and engineering solutions that make a difference. My projects are a testament to my ambition and ability to tackle complex challenges.</p>
-            </section>
+            <main>
+                <section id="about" class="card interactive-card dynamic-reveal">
+                    <div class="card-3d-wrapper">
+                        <div class="card-border-animated"></div>
+                        <div class="card-glow"></div>
+                        <div class="card-content-wrapper">
+                            <h2 class="section-title" data-content="[ About Me ]"><span>[ About Me ]</span></h2>
+                            <p class="text-flow">Welcome to the official portfolio of <strong>Abhinit Barua</strong>, a 14-year-old full-stack developer, tech innovator, and the creative mind behind The Tech Factory. From a young age, I developed a passion for creating and engineering solutions that make a difference. My projects are a testament to my ambition and ability to tackle complex challenges head-on with bleeding-edge technologies.</p>
+                            <div class="decorative-lines">
+                                <span style="--delay: 0s;"></span><span style="--delay: 0.2s;"></span><span style="--delay: 0.4s;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-            <section id="actions" class="card interactive-card">
-                <div class="card-glow"></div>
-                <h2 class="section-title" data-content="Explore My Work"><span>Explore My Work</span></h2>
-                <div class="button-group">
-                    <a href="#projects-section" class="btn btn-primary futuristic-btn">
-                        <span>Projects</span>
-                        <div class="btn-glare"></div>
-                    </a>
-                    <a href="#skills-section" class="btn btn-secondary futuristic-btn">
-                        <span>Skills</span>
-                        <div class="btn-glare"></div>
+                <section id="actions" class="card interactive-card dynamic-reveal">
+                     <div class="card-3d-wrapper">
+                        <div class="card-border-animated"></div>
+                        <div class="card-glow"></div>
+                        <div class="card-content-wrapper">
+                            <h2 class="section-title" data-content="[ Explore Further ]"><span>[ Explore Further ]</span></h2>
+                            <div class="button-group">
+                                <a href="#projects-section" class="btn btn-primary futuristic-btn btn-magnetic">
+                                    <span>Projects</span>
+                                    <div class="btn-glare"></div>
+                                    <div class="btn-particles">
+                                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                                    </div>
+                                </a>
+                                <a href="#skills-section" class="btn btn-secondary futuristic-btn btn-magnetic">
+                                    <span>Skills</span>
+                                    <div class="btn-glare"></div>
+                                     <div class="btn-particles">
+                                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="decorative-circuit">
+                                <svg viewBox="0 0 100 50" preserveAspectRatio="none"><path d="M0 25 Q 15 -10, 30 25 T 60 35 T 80 15 T 100 25" stroke="var(--accent-color)" stroke-width="1" fill="none" stroke-dasharray="3,3" class="circuit-path"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="socials" class="card interactive-card dynamic-reveal">
+                    <div class="card-3d-wrapper">
+                        <div class="card-border-animated"></div>
+                        <div class="card-glow"></div>
+                        <div class="card-background-pattern"></div> {/* Moved for better layering */}
+                        <div class="card-content-wrapper">
+                            <h2 class="section-title" data-content="[ Connect & Collaborate ]"><span>[ Connect & Collaborate ]</span></h2>
+                            <ul class="social-links">
+                                <li>
+                                    <a href="https://github.com/abhinitbarua" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-icon-link social-magnetic">
+                                        <i class="fab fa-github"></i> <span class="tooltip">GitHub</span>
+                                    </a>
+                                </li>
+                                {/* ... other social links ... */}
+                                <li>
+                                    <a href="https://gitlab.com/thatsnotabhiinit" target="_blank" rel="noopener noreferrer" aria-label="GitLab" class="social-icon-link social-magnetic">
+                                        <i class="fab fa-gitlab"></i> <span class="tooltip">GitLab</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="projects-section" class="placeholder-section card interactive-card dynamic-reveal">
+                    <div class="card-3d-wrapper">
+                        <div class="card-border-animated"></div>
+                        <div class="card-glow"></div>
+                        <div class="matrix-bg-v2"></div>
+                        <div class="card-content-wrapper">
+                            <h2 class="section-title" data-content="[ My Projects ]"><span>[ My Projects ]</span></h2>
+                            <p class="text-flow"><em>(Showcasing innovative projects. Expect interactive demos, code breakdowns, and visual feasts!)</em></p>
+                            <div class="project-grid-placeholder">
+                                <div class="project-item-placeholder"><div class="item-glow"></div><span>Project Alpha</span></div>
+                                <div class="project-item-placeholder"><div class="item-glow"></div><span>Project Beta</span></div>
+                                <div class="project-item-placeholder"><div class="item-glow"></div><span>Project Gamma</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="skills-section" class="placeholder-section card interactive-card dynamic-reveal">
+                    <div class="card-3d-wrapper">
+                        <div class="card-border-animated"></div>
+                        <div class="card-glow"></div>
+                        <div class="card-content-wrapper">
+                            <h2 class="section-title" data-content="[ My Skill Arsenal ]"><span>[ My Skill Arsenal ]</span></h2>
+                            <p class="text-flow"><em>(Visualizing expertise. Interactive skill trees & proficiency animations are on the way!)</em></p>
+                            <div class="skills-bars-placeholder">
+                                <div class="skill-bar-placeholder" style="--skill-level: 90%; --skill-color: var(--accent-color);">
+                                    <span class="skill-name-placeholder">Frontend Wizardry</span>
+                                    <div class="skill-level-bg"><div class="skill-level-fill"></div></div>
+                                </div>
+                                <div class="skill-bar-placeholder" style="--skill-level: 85%; --skill-color: var(--primary-color);">
+                                    <span class="skill-name-placeholder">Backend Sorcery</span>
+                                    <div class="skill-level-bg"><div class="skill-level-fill"></div></div>
+                                </div>
+                                <div class="skill-bar-placeholder" style="--skill-level: 75%; --skill-color: var(--secondary-color);">
+                                    <span class="skill-name-placeholder">DevOps & Cloud</span>
+                                     <div class="skill-level-bg"><div class="skill-level-fill"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="site-footer-enhanced">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <h4>Abhinit Barua</h4>
+                        <p class="footer-tagline">© <span id="current-year"></span>. Architecting Tomorrow's Tech, Today.</p>
+                        <p>Crafted with <i class="fas fa-heart pulse-heart"></i>, <i class="fas fa-brain"></i> and copious <i class="fas fa-mug-hot"></i>.</p>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Navigation</h4>
+                        <ul class="footer-nav">
+                            <li><a href="#about" class="magnetic-link-sm"><span>About</span></a></li>
+                            <li><a href="#projects-section" class="magnetic-link-sm"><span>Projects</span></a></li>
+                            <li><a href="#skills-section" class="magnetic-link-sm"><span>Skills</span></a></li>
+                            <li><a href="#socials" class="magnetic-link-sm"><span>Contact</span></a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <div class="footer-socials">
+                            <a href="https://github.com/abhinitbarua" aria-label="GitHub" class="social-magnetic-sm"><i class="fab fa-github"></i></a>
+                            <a href="https://discord.com/invite/YgSM8mPw52" aria-label="Discord" class="social-magnetic-sm"><i class="fab fa-discord"></i></a>
+                            <a href="mailto:abhinitinspace@gmail.com" aria-label="Email" class="social-magnetic-sm"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom-bar">
+                    <p>Session Active | Status: <span class="status-online">Online</span> | Design Iteration: v3.0 "Nebula"</p>
+                    <a href="#preloader" id="scroll-to-top" class="scroll-to-top-btn magnetic-link-sm">
+                        <i class="fas fa-angle-double-up"></i>
+                        <span>Top</span>
                     </a>
                 </div>
-            </section>
-
-            <section id="socials" class="card interactive-card">
-                <div class="card-glow"></div>
-                <h2 class="section-title" data-content="Connect With Me"><span>Connect With Me</span></h2>
-                <ul class="social-links">
-                    <li>
-                        <a href="https://github.com/abhinitbarua" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-icon-link">
-                            <i class="fab fa-github"></i> <span class="tooltip">GitHub</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://discord.com/invite/YgSM8mPw52" target="_blank" rel="noopener noreferrer" aria-label="Discord" class="social-icon-link">
-                            <i class="fab fa-discord"></i> <span class="tooltip">Discord</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="mailto:abhinitinspace@gmail.com" aria-label="Email" class="social-icon-link">
-                            <i class="fas fa-envelope"></i> <span class="tooltip">Email</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://reddit.com/r/TheTechFactory/?rdt=43049" target="_blank" rel="noopener noreferrer" aria-label="Reddit" class="social-icon-link">
-                            <i class="fab fa-reddit-alien"></i> <span class="tooltip">Reddit</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://gitlab.com/thatsnotabhiinit" target="_blank" rel="noopener noreferrer" aria-label="GitLab" class="social-icon-link">
-                            <i class="fab fa-gitlab"></i> <span class="tooltip">GitLab</span>
-                        </a>
-                    </li>
-                </ul>
-            </section>
-        </main>
-
-        <footer>
-            <div class="footer-content">
-                <p>© <span id="current-year"></span> Abhinit Barua. Architecting the Future.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
-                </div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
