@@ -379,7 +379,7 @@ body::after { /* Global noise overlay */
     gap: calc(var(--spacing-unit) * 1); /* Slightly reduced gap */
     flex-wrap: wrap;
     opacity: 0; transform: translateY(10px);
-    animation: navReveal 1s var(--transition-smooth) 4.4s forwards;
+    animation: navReveal 1s var(--transition-smooth) 0.4s forwards;
 }
 @keyframes navReveal {
     to { opacity: 1; transform: translateY(0); }
