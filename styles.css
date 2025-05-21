@@ -97,49 +97,7 @@ body {
     overflow-x: hidden;
     position: relative; /* For absolute positioned elements */
     min-height: 100vh;
-    cursor: none; /* Hide default cursor */
     perspective: var(--perspective-distance); /* For 3D effects on children */
-}
-
-/* --- === Custom Cursor === --- */
-.cursor-dot, .cursor-ring {
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 99999; /* Above everything */
-    border-radius: 50%;
-    opacity: 0; /* Hidden initially, JS makes visible */
-    transition: opacity 0.3s, transform 0.1s linear;
-    will-change: transform, opacity;
-}
-.cursor-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent-color);
-    box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
-}
-.cursor-ring {
-    width: 30px;
-    height: 30px;
-    border: 2px solid var(--primary-color);
-    transition-duration: 0.2s; /* Slower ring for trailing effect */
-}
-body.cursor-active .cursor-dot,
-body.cursor-active .cursor-ring {
-    opacity: 1;
-}
-body.cursor-pointer .cursor-ring { /* When hovering over links/buttons */
-    transform: scale(1.5);
-    border-color: var(--accent-hot-color);
-    background-color: rgba(var(--accent-hot-color-rgb), 0.1);
-}
-body.cursor-pointer .cursor-dot {
-    transform: scale(0.5);
-    opacity: 0.7;
-}
-body.cursor-hidden .cursor-dot,
-body.cursor-hidden .cursor-ring {
-    opacity: 0 !important;
 }
 
 /* --- === Parallax Background Layers === --- */
