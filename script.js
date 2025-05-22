@@ -226,9 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         scrollActiveNav(); // Check active nav for top of page
     }
-
-}); // End DOMContentLoaded
-
+    
     const musicPlayer = document.getElementById('backgroundMusicPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const musicControlsContainer = document.getElementById('musicControlsContainer');
