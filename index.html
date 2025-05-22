@@ -9,29 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Electrolize&family=Orbitron:wght@700;900&family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Music Player Controls -->
-<div class="music-player-controls" id="musicControlsContainer">
-    <button id="playPauseBtn" class="music-btn" aria-label="Play Background Music" title="Play Music">
-        <svg class="play-icon icon-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 5v14l11-7z"/>
-        </svg>
-        <svg class="pause-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none;">
-            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-        </svg>
-        <span class="music-status-waves">
-            <span></span><span></span><span></span><span></span><span></span>
-        </span>
-    </button>
-    <div class="music-tooltip">
-        <span>Can You Hear The Music - Oppenheimer OST</span>
-    </div>
-</div>
-
-<audio id="backgroundMusicPlayer" loop>
-    <!-- IMPORTANT: Replace with the ACTUAL path to YOUR MP3 file -->
-    <source src="/audio/can-you-hear-the-music.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
     <!-- Parallax Background Layers -->
     <div class="parallax-bg">
         <div class="bg-layer layer-1" style="--parallax-speed: 5;"></div> <!-- Deep space nebula -->
